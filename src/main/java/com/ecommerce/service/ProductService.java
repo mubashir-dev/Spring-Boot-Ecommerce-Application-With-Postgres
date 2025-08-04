@@ -75,4 +75,11 @@ public class ProductService {
         Product productUpdate = productRepository.save(product);
         return modelMapper.map(productUpdate, ProductStatusResponseDto.class);
     }
+
+    public Boolean updateQuantity(Long id, int quantity) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product Not Found with " + id + " ID"));
+        product.setQuantity(product.getQuantity() - quantity);
+        productRepository.save(product);
+        return true;
+    }
 }

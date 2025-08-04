@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("v1/categories")
+@RequestMapping("api/v1/categories")
 @Tag(name = "Category Controller")
 public class CategoryController {
     private static final Logger log = LoggerFactory.getLogger(CategoryController.class);

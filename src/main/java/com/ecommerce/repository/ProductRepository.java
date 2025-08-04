@@ -17,6 +17,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "SELECT * FROM products WHERE deleted = false AND uuid = ?1", nativeQuery = true)
     Optional<Product> findByUUID(UUID uuid);
 
-    @Query(value = "SELECT * FROM products WHERE deleted = false", nativeQuery = true)
+    @Query(value = "SELECT * FROM products WHERE deleted = false AND id = ?1", nativeQuery = true)
+    Optional<Product> findById(Long id);
+
+    @Query(value = "SELECT * FROM products WHERE deleted = false ORDER BY id", nativeQuery = true)
     List<Product> findAllActive();
 }
