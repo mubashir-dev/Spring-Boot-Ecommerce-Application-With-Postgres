@@ -30,8 +30,8 @@ public class CategoryController {
 
     @Operation(summary = "Get Categories")
     @GetMapping("")
-    public ResponseEntity<PageResponse<CategoryDto>> find(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(this.categoryService.find(PageRequest.of(page, size == 0 ? 1 : size)));
+    public ResponseEntity<PageResponse<CategoryDto>> find(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "") String search) {
+        return ResponseEntity.ok(this.categoryService.find(PageRequest.of(page, size == 0 ? 1 : size),search));
     }
 
     @Operation(summary = "Get Category")

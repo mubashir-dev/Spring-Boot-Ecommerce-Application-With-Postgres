@@ -1,6 +1,7 @@
 package com.ecommerce.controller;
 
 import com.ecommerce.dto.CategoryDto;
+import com.ecommerce.dto.response.PageResponse;
 import com.ecommerce.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,9 +40,8 @@ public class AdminCategoryController {
 
     @Operation(summary = "Delete Category")
     @DeleteMapping("/{uuid}")
-    public ResponseEntity<CategoryDto> delete(@PathVariable UUID uuid) {
-        CategoryDto newCategory = this.categoryService.delete(uuid);
-        return new ResponseEntity<>(newCategory, HttpStatus.OK);
+    public ResponseEntity<PageResponse<String>> delete(@PathVariable UUID uuid) {
+        return new ResponseEntity<>(this.categoryService.delete(uuid), HttpStatus.OK);
     }
 }
 

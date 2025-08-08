@@ -2,6 +2,8 @@ package com.ecommerce.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SoftDelete;
+import org.hibernate.annotations.SoftDeleteType;
 
 import java.util.UUID;
 
@@ -11,6 +13,7 @@ import java.util.UUID;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@SoftDelete(strategy = SoftDeleteType.DELETED)
 public class Category {
 
     @Id
@@ -28,9 +31,6 @@ public class Category {
 
     @Column(nullable = true)
     private String image;
-
-    @Column(nullable = true)
-    private Boolean deleted = false;
 
     @PrePersist
     protected void onCreate() {

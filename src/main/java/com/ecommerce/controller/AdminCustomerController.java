@@ -26,9 +26,8 @@ public class AdminCustomerController {
 
     @GetMapping
     @Operation(summary = "Get Customers")
-    public ResponseEntity<PageResponse<CustomerResponseDto>> find(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
-        Pageable pageable = PageRequest.of(page, size == 0 ? 1 : size);
-        return ResponseEntity.ok(customerService.find(pageable));
+    public ResponseEntity<PageResponse<CustomerResponseDto>> find(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size, @RequestParam(defaultValue = "") String search) {
+        return ResponseEntity.ok(customerService.find(PageRequest.of(page, size == 0 ? 1 : size), search));
     }
 
     @GetMapping("/{uuid}")

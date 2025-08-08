@@ -21,6 +21,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query(value = "SELECT * FROM categories WHERE deleted = false AND id = ?1", nativeQuery = true)
     Optional<Category> findById(Long id);
 
-    @Query(value = "SELECT * FROM categories WHERE deleted = false", nativeQuery = true)
-    Page<Category> findAllActive(Pageable pageable);
+    @Query(value = "SELECT * FROM categories "
+            + "WHERE title  LIKE %:title% "
+            + "ORDER BY id", nativeQuery = true)
+    Page<Category> findAll(Pageable pageable, String title);
 }

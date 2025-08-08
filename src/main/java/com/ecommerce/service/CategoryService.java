@@ -30,8 +30,8 @@ public class CategoryService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public PageResponse<CategoryDto> find(Pageable pageable) {
-        Page<Category> categories = categoryRepository.findAll(pageable);
+    public PageResponse<CategoryDto> find(Pageable pageable, String search) {
+        Page<Category> categories = categoryRepository.findAll(pageable, search);
         List<CategoryDto> content = categories.getContent().stream().map(category -> modelMapper.map(category, CategoryDto.class)).toList();
         return new PageResponse<>("Categories Fetched Successfully", content, categories.getNumber(), categories.getSize(), categories.getTotalElements(), categories.getTotalPages(), categories.isLast());
     }
@@ -61,13 +61,10 @@ public class CategoryService {
     }
 
 
-    public CategoryDto delete(UUID uuid) {
+    public PageResponse<String> delete(UUID uuid) {
         Category category = categoryRepository.findByUuid(uuid).orElseThrow(() -> new ResourceNotFoundException("Category not found with UUID: " + uuid));
-
-        Category categoryBuilder = category.toBuilder().deleted(true).build();
-
-        Category deletedCategory = categoryRepository.save(categoryBuilder);
-        return modelMapper.map(deletedCategory, CategoryDto.class);
+        categoryRepository.delete(category);
+        return new PageResponse("Category record has been deleted");
     }
 
 }

@@ -31,8 +31,8 @@ public class ProductService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public PageResponse<ProductResponseDto> find(Pageable pageable) {
-        Page<Product> products = productRepository.findAllActive(pageable);
+    public PageResponse<ProductResponseDto> find(Pageable pageable,String search) {
+        Page<Product> products = productRepository.findAllActive(pageable,search);
         List<ProductResponseDto> content = products.getContent().stream().map(product -> modelMapper.map(product, ProductResponseDto.class)).toList();
         return new PageResponse<>(
                 "Products Fetched Successfully",

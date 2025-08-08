@@ -22,6 +22,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "SELECT * FROM products WHERE deleted = false AND id = ?1", nativeQuery = true)
     Optional<Product> findById(Long id);
 
-    @Query(value = "SELECT * FROM products WHERE deleted = false ORDER BY id", nativeQuery = true)
-    Page<Product> findAllActive(Pageable pageable);
+    @Query(value = "SELECT * FROM products " +
+            "WHERE deleted = false " +
+            "AND title LIKE %:title% " +
+            "ORDER BY id",
+            nativeQuery = true)
+    Page<Product> findAllActive(Pageable pageable, String title);
 }

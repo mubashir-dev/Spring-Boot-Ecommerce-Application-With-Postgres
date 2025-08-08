@@ -66,7 +66,8 @@ public class AuthService {
         User user = (User) authentication.getPrincipal();
 
         String accessToken = jwtUtil.generateAccessToken(user);
+        log.info("JWT Access Token {}", accessToken);
 
-        return modelMapper.map(new AuthResponseDto(user.getId(),accessToken), AuthResponseDto.class);
+        return modelMapper.map(new AuthResponseDto(user.getId(), accessToken), AuthResponseDto.class);
     }
 }

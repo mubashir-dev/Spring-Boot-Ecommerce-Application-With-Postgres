@@ -17,6 +17,9 @@ public class JwtUtil {
     @Value("${jwt.secretKey}")
     private String JwtSecretKey;
 
+    @Value("${jwt.expiration}")
+    private String JwtExpirationTime;
+
     private SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(JwtSecretKey.getBytes(StandardCharsets.UTF_8));
     }

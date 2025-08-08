@@ -23,8 +23,8 @@ public class CustomerService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public PageResponse<CustomerResponseDto> find(Pageable pageable) {
-        Page<Customer> customers = customerRepository.findAll(pageable);
+    public PageResponse<CustomerResponseDto> find(Pageable pageable,String search) {
+        Page<Customer> customers = customerRepository.findAll(pageable,search);
 
         List<CustomerResponseDto> content = customers.getContent()
                 .stream()

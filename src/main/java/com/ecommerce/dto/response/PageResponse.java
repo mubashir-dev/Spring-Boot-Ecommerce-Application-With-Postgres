@@ -28,7 +28,12 @@ public class PageResponse<T> {
         this.last = null;
     }
 
-    public PageResponse(List<T> data) {
+    public PageResponse(Object data) {
         this.data = data;
+    }
+
+    public PageResponse(Object data, String message) {
+        this.data = data;
+        this.message = message;
     }
 }
