@@ -23,10 +23,4 @@ public class CategoryDto {
 
     @Nullable()
     private String image;
-
-    @NotEmpty()
-    private float price;
-
-    @NotEmpty
-    private int quantity;
 }

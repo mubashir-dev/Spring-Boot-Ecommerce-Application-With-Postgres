@@ -1,6 +1,8 @@
 package com.ecommerce.repository;
 
 import com.ecommerce.model.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -21,5 +23,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findById(Long id);
 
     @Query(value = "SELECT * FROM products WHERE deleted = false ORDER BY id", nativeQuery = true)
-    List<Product> findAllActive();
+    Page<Product> findAllActive(Pageable pageable);
 }

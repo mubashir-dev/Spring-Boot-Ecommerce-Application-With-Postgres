@@ -4,6 +4,7 @@ import com.ecommerce.dto.OrderCreateDto;
 import com.ecommerce.dto.OrderDetailCreateDto;
 import com.ecommerce.dto.order.OrderResponseDto;
 import com.ecommerce.dto.order.OrderUpdateStatusDto;
+import com.ecommerce.dto.response.PageResponse;
 import com.ecommerce.enums.OrderStatus;
 import com.ecommerce.exception.BadRequestException;
 import com.ecommerce.exception.ResourceNotFoundException;
@@ -20,6 +21,8 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -49,11 +52,16 @@ public class OrderService {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private MailService mailService;
+
     @Transactional
-    public String create(OrderCreateDto orderCreateDto) {
+    public PageResponse create(OrderCreateDto orderCreateDto) {
 
         //Invalid product ids
         List<Long> invalidProductIds = new ArrayList<>();
+
+        int totalPrice = 0;
 
         //validate order cart data
         for (OrderDetailCreateDto orderDetail : orderCreateDto.getOrderDetail()) {
@@ -90,14 +98,29 @@ public class OrderService {
 
             OrderDetail orderDetailBuilder = OrderDetail.builder().order(newOrder).product(product).quantity(orderDetail.getQuantity()).price(orderDetail.getPrice()).totalPrice(orderDetail.getTotalPrice()).build();
             orderDetailRepository.save(orderDetailBuilder);
+            totalPrice += orderDetail.getTotalPrice();
         }
 
-        return "Order has Successfully been placed";
+        //send email
+        String emailBody = """
+                <h3>Order Confirmed</h3>
+                               
+                <h4> Product Details </h4>
+                <h4> Total Amount : %s</h4>
+                <h4> Order Status : %s</h4>
+                              
+                </br>
+                <p> Thanks for placing the order </p>         
+                 """.formatted(totalPrice, newOrder.getStatus());
+        mailService.sendEmail(orderCreateDto.getEmail(), "Order Confirmed", emailBody);
+
+        return new PageResponse<>("Order has Successfully been placed");
     }
 
-    public List<OrderResponseDto> find() {
-        List<Order> orders = orderRepository.findAll();
-        return orders.stream().map(order -> modelMapper.map(order, OrderResponseDto.class)).toList();
+    public PageResponse<OrderResponseDto> find(Pageable pageable) {
+        Page<Order> orders = orderRepository.findAll(pageable);
+        List<OrderResponseDto> content = orders.getContent().stream().map(order -> modelMapper.map(order, OrderResponseDto.class)).toList();
+        return new PageResponse<>("Orders Fetched Successfully", content, orders.getNumber(), orders.getSize(), orders.getTotalElements(), orders.getTotalPages(), orders.isLast());
     }
 
     public OrderResponseDto findOne(UUID uuid) {

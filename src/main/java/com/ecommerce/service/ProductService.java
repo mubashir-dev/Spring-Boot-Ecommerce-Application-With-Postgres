@@ -1,6 +1,7 @@
 package com.ecommerce.service;
 
 import com.ecommerce.dto.*;
+import com.ecommerce.dto.response.PageResponse;
 import com.ecommerce.exception.ResourceAlreadyExistException;
 import com.ecommerce.exception.ResourceNotFoundException;
 import com.ecommerce.model.Category;
@@ -10,6 +11,8 @@ import com.ecommerce.repository.ProductRepository;
 import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,10 +31,18 @@ public class ProductService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<ProductResponseDto> find() {
-        List<Product> products = productRepository.findAllActive();
-
-        return products.stream().map(product -> modelMapper.map(product, ProductResponseDto.class)).toList();
+    public PageResponse<ProductResponseDto> find(Pageable pageable) {
+        Page<Product> products = productRepository.findAllActive(pageable);
+        List<ProductResponseDto> content = products.getContent().stream().map(product -> modelMapper.map(product, ProductResponseDto.class)).toList();
+        return new PageResponse<>(
+                "Products Fetched Successfully",
+                content,
+                products.getNumber(),
+                products.getSize(),
+                products.getTotalElements(),
+                products.getTotalPages(),
+                products.isLast()
+        );
     }
 
     public ProductResponseDto findOne(UUID uuid) {
