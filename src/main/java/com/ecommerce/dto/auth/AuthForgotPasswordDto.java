@@ -5,17 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class AuthRegisterDto {
-    @NotNull
-    private String name;
-
+public class AuthForgotPasswordDto {
     @NotNull
     @Email
     private String email;
-
-    @NotNull
-    private String username;
-
-    @NotNull
-    private String password;
 }

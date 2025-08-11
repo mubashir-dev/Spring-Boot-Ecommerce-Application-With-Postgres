@@ -54,8 +54,8 @@ public class CategoryService {
 
     public CategoryDto update(UUID uuid, CategoryDto categoryDto) {
         Category category = categoryRepository.findByUuid(uuid).orElseThrow(() -> new ResourceNotFoundException("Category not found with UUID: " + uuid));
-        Category categoryBuilder = category.toBuilder().title(categoryDto.getTitle() != null ? categoryDto.getTitle() : category.getTitle()).description(categoryDto.getDescription() != null ? categoryDto.getDescription() : category.getDescription()).image(categoryDto.getImage() != null ? categoryDto.getImage() : category.getImage()).build();
 
+        Category categoryBuilder = category.toBuilder().title(categoryDto.getTitle() != null ? categoryDto.getTitle() : category.getTitle()).description(categoryDto.getDescription() != null ? categoryDto.getDescription() : category.getDescription()).image(categoryDto.getImage() != null ? categoryDto.getImage() : category.getImage()).build();
         Category updatedCategory = categoryRepository.save(categoryBuilder);
         return modelMapper.map(updatedCategory, CategoryDto.class);
     }
